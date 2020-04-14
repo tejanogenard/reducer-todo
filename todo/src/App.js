@@ -1,12 +1,21 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useReducer } from 'react';
+import id from 'uuid/v4'
+import todoTask from './components/todoTask'
+import todoList from './components/todoList'
 import './App.css';
+
+
+const reducer = (state, action) => {
+  return state 
+}
+
+
+
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
