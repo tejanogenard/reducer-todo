@@ -1,35 +1,62 @@
-import React, {useReducer } from 'react';
-import id from 'uuid/v4'
-import todoTask from './components/todoTask'
-import todoList from './components/todoList'
-import './App.css';
+import React, { useReducer } from 'react';
+
+import id from 'uuid/v4';
+
+import todoList from './todoList';
+import newTodo from './newTodo';
+
+import initialState from './initialState';
 
 
-const reducer = (state, action) => {
-  return state 
+
+
+const GRUDGE_ADD = "GRUDGE_ADD"
+const GRUDGE_FORGIVE = "GRIDGE_FORGIVE"
+
+
+const Reducer = ( state, action ) => {
+  if(action.type === GRUDGE_ADD){
+    return[action.payload, ...state]
+  }
+  if(action.type === GRUDGE_FORGIVE){
+    return state.map(grudge => {
+          if (grudge.id !== action.payload.id) return grudge;
+          return { ...grudge, forgiven: !grudge.forgiven };
+        })
+  }
+
+
+  return state
 }
 
+const Application = () => {
+  const [grudges, dispatch] = useReducer(Reducer, initialState);
 
+  const addGrudge = ({person, reason}) => {
+   dispatch({
+     type: GRUDGE_ADD,
+     payload: {
+       person,
+       reason,
+       forgiven: false,
+       id: id()
+     }
+   })
+  };
 
+  const toggleForgiveness = id => {
+    dispatch({
+      type: GRUDGE_FORGIVE,
+      payload: { id }
+    })
+  };
 
-function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="Application">
+      <NewGrudge onSubmit={addGrudge} />
+      <Grudges grudges={grudges} onForgive={toggleForgiveness} />
     </div>
   );
-}
+};
 
-export default App;
+export default Application;
