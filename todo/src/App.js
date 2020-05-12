@@ -26,7 +26,7 @@ const reducer = (state, action) => {
         })
       case CLEAR_TODO:
         console.log("SOJSDKHSD",action)
-        return state.filter(task => task.id === action.payload.id)
+        return state.filter(task => task.completed === false)
         default:
           return state
     }
@@ -55,13 +55,6 @@ const toggleTodo = id => {
   },[dispatch])
 }
 
-// const clearCompleted = id => {
-//   console.log("CLICKED")
-//   dispatch({
-//     type: CLEAR_TODO,
-//     payload: { id }
-//   }, [dispatch])
-// }
 
 return(
   <div className = "app">
