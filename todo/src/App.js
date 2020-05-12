@@ -1,62 +1,74 @@
-import React, { useReducer } from 'react';
+import React, {useReducer}from 'react'
+import id from 'uuid/v4'
+ import NewTodo from './components/NewTodo'
+import TodoList from './components/TodoList'
+import initialState from './components/initialState'
 
-import id from 'uuid/v4';
+//Actions 
 
-import todoList from './todoList';
-import newTodo from './newTodo';
+const ADD_TODO = "ADD_TODO"
+const TOGGLE_TODO = "TOGGLE_TODO"
+const CLEAR_TODO = "CLEAR_TODO"
 
-import initialState from './initialState';
+//Reducer 
 
-
-
-
-const GRUDGE_ADD = "GRUDGE_ADD"
-const GRUDGE_FORGIVE = "GRIDGE_FORGIVE"
-
-
-const Reducer = ( state, action ) => {
-  if(action.type === GRUDGE_ADD){
-    return[action.payload, ...state]
-  }
-  if(action.type === GRUDGE_FORGIVE){
-    return state.map(grudge => {
-          if (grudge.id !== action.payload.id) return grudge;
-          return { ...grudge, forgiven: !grudge.forgiven };
+const reducer = (state, action) => {
+  switch(action.type){
+    case ADD_TODO:
+      return[
+        action.payload,   
+        ...state,          
+      ]
+      case TOGGLE_TODO:
+        return state.map(task => {
+          if(task.id !== action.payload.id) return task
+          return{...task, completed: !task.completed}
         })
+      case CLEAR_TODO:
+        console.log("SOJSDKHSD",action)
+        return state.filter(task => task.id === action.payload.id)
+        default:
+          return state
+    }
   }
 
+const App = () => {
+const [todos, dispatch] = useReducer(reducer, initialState)
 
-  return state
+
+const addTodo = ({task, details}) => {
+  dispatch({
+    type: ADD_TODO,
+    payload: {
+      task,
+      details,
+      completed: false,
+      id:id()
+    }
+  },[dispatch])
 }
 
-const Application = () => {
-  const [grudges, dispatch] = useReducer(Reducer, initialState);
+const toggleTodo = id => {
+  dispatch({
+    type: TOGGLE_TODO,
+    payload: {id}
+  },[dispatch])
+}
 
-  const addGrudge = ({person, reason}) => {
-   dispatch({
-     type: GRUDGE_ADD,
-     payload: {
-       person,
-       reason,
-       forgiven: false,
-       id: id()
-     }
-   })
-  };
+// const clearCompleted = id => {
+//   console.log("CLICKED")
+//   dispatch({
+//     type: CLEAR_TODO,
+//     payload: { id }
+//   }, [dispatch])
+// }
 
-  const toggleForgiveness = id => {
-    dispatch({
-      type: GRUDGE_FORGIVE,
-      payload: { id }
-    })
-  };
-
-  return (
-    <div className="Application">
-      <NewGrudge onSubmit={addGrudge} />
-      <Grudges grudges={grudges} onForgive={toggleForgiveness} />
-    </div>
-  );
-};
-
-export default Application;
+return(
+  <div className = "app">
+    <NewTodo  onSubmit = {addTodo}/>
+    <TodoList todos={todos} onCompletion={toggleTodo}/>
+    <button onClick={() => dispatch({ type: CLEAR_TODO, payload: { id }})}>Clear All</button>
+  </div>
+  )
+}
+export default App 

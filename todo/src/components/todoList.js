@@ -1,14 +1,16 @@
 import React from 'react'
-import todoTask from './todoTask'
+import TodoTask from './TodoTask'
 
-const todoList = ({ todolist =[], onCompletion}) => {
+const TodoList = ({ todos =[], onCompletion}) => {
+
     return(
         <section className="TaskList">
-        <h2>Task List ({todolist.length})</h2>
-        {todolist.map(task => (
-          <Grudge key={task.id} grudge={task} onCompletion={onCompleted} />
+        <h2>Task List ({todos.length})</h2>
+        {todos.map(task => (
+          <TodoTask key={task.id} task={task} onCompletion={onCompletion} />
         ))}
+
       </section>
     )
 }
-export default todoList
+export default TodoList
